@@ -3,6 +3,8 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+import mongoengine
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
@@ -60,14 +62,21 @@ WSGI_APPLICATION = 'covenant_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME':   os.getenv('MONGO_NAME'),
-        'HOST':   os.getenv('MONGO_HOST'),
-        'PORT':   os.getenv('MONGO_PORT'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'NAME':   os.getenv('MONGO_NAME'),
+#         'HOST':   os.getenv('MONGO_HOST'),
+#         'PORT':   os.getenv('MONGO_PORT'),
+#     }
+# }
+
+mongoengine.connect(
+    db   = os.getenv("MONGO_NAME"), 
+    host = f"mongodb://{os.getenv('MONGO_HOST')}:{os.getenv('MONGO_PORT')}/",
+    username = os.getenv("MONGO_USER"),
+    password = os.getenv("MONGO_PASSWORD"),
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
