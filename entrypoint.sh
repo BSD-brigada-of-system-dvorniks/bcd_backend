@@ -7,4 +7,4 @@ python manage.py collectstatic --noinput
 printenv | grep -v "no_proxy" >> /etc/environment
 
 # Service start
-python manage.py runserver
+python manage.py runserver 0.0.0.0:80
