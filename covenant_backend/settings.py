@@ -17,6 +17,10 @@ if DEBUG:
 else:
     ALLOWED_HOSTS = [os.getenv('DJANGO_DOMAIN'), "localhost", "127.0.0.1"]
 
+CSRF_TRUSTED_ORIGINS = [
+    f"http://*.{os.getenv('DJANGO_DOMAIN')}",
+]
+
 # Application definition
 
 INSTALLED_APPS = [
