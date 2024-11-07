@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -66,14 +67,7 @@ WSGI_APPLICATION = 'covenant_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'djongo',
-#         'NAME':   os.getenv('MONGO_NAME'),
-#         'HOST':   os.getenv('MONGO_HOST'),
-#         'PORT':   os.getenv('MONGO_PORT'),
-#     }
-# }
+DATABASES = {}
 
 mongoengine.connect(
     db   = os.getenv("MONGO_NAME"), 
@@ -100,6 +94,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

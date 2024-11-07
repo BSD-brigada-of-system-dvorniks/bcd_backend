@@ -6,9 +6,9 @@ from .views import ObjectListView, ObjectCreateView, \
 
 appname = 'objects'
 urlpatterns = [
-    path('',                ObjectListView.as_view(),   name = 'object-list'),
-    path('create/',          ObjectCreateView.as_view(), name = 'object-create'),
-    path('<str:id>/',        ObjectDetailView.as_view(), name = 'object-detail'),
-    path('<str:id>/update/', ObjectUpdateView.as_view(), name = 'object-update'),
-    path('<str:id>/delete/', ObjectDeleteView.as_view(), name = 'object-delete'),
+    path('',                ObjectListView.as_view(),    name = 'list'),
+    path('create/',          ObjectCreateView.as_view(), name = 'create'),
+    path('<str:id>/',        ObjectDetailView.as_view(), name = 'detail'),
+    path('<str:id>/update/', ObjectUpdateView.as_view(), name = 'update'),
+    path('<str:id>/delete/', ObjectDeleteView.as_view(), name = 'delete'),
 ]
