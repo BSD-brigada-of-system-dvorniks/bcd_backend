@@ -4,6 +4,7 @@ from .models import User
 
 
 class UserSerializer(serializers.Serializer):
+    id = serializers.CharField(read_only = True)
     username = serializers.CharField(max_length = 32)
     email = serializers.EmailField()
     password = serializers.CharField(write_only = True)

@@ -1,5 +1,7 @@
 from rest_framework import serializers
+
 from .models import Object
+from accounts.serializers import UserSerializer
 
 
 class ObjectSerializer(serializers.Serializer):
@@ -7,8 +9,9 @@ class ObjectSerializer(serializers.Serializer):
     name = serializers.CharField(max_length = 128)
     type = serializers.ChoiceField(choices = Object.TYPE_OPTIONS, required = False)
     level = serializers.IntegerField(min_value = 1, max_value = 5, required = False)
-    text = serializers.CharField(required = False)
+    text = serializers.CharField(max_length = 256_000, required = False)
     published = serializers.BooleanField(default = False)
+    author = UserSerializer(read_only = True)
 
     def create(self, validated_data):
         return Object(**validated_data).save()

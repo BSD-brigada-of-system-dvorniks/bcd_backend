@@ -1,19 +1,16 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authtoken.models import Token
-from rest_framework.authentication import TokenAuthentication, get_authorization_header
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.exceptions import AuthenticationFailed
 
 from .models import User, Token
 from .serializers import UserSerializer, LoginSerializer
+from .utils import get_user_from_token
+
+from objects.models import Object
+from objects.serializers import ObjectSerializer
 
 
 class RegisterView(APIView):
-
-    permission_classes = [AllowAny]
-
     def post(self, request):
         serializer = UserSerializer(data = request.data)
         if serializer.is_valid():
@@ -44,38 +41,30 @@ class LoginView(APIView):
 
 class LogoutView(APIView):
     def post(self, request):
-        auth_header = get_authorization_header(request).split()
-        if len(auth_header) == 2:
-            try:
-                token_key = auth_header[1].decode()
-                token = Token.objects(key = token_key).first()
-                if token:
-                    token.delete()
-                    return Response({"message": "Successfully logged out"}, status = status.HTTP_200_OK)
-            except Token.DoesNotExist:
-                pass
-
-        return Response({"error": "Invalid token"}, status = status.HTTP_400_BAD_REQUEST)
+        user = get_user_from_token(request)
+        token = Token.objects(user = user).first()
+        
+        if token:
+            token.delete()
+            return Response({"message": "Successfully logged out"}, status = status.HTTP_200_OK)
+        
+        else:
+            return Response({"error": "Token not found"}, status = status.HTTP_400_BAD_REQUEST)
 
 
 class CurrentUserView(APIView):
     def get(self, request):
-        auth_header = get_authorization_header(request)
-        if not auth_header:
-            raise AuthenticationFailed('Authorization header is missing.')
-
-        parts = auth_header.split()
-        if len(parts) != 2 or parts[0].lower() != b'token':
-            raise AuthenticationFailed('Authorization token is invalid.')
-
-        token_key = parts[1].decode()
-        
-        try:
-            token = Token.objects.get(key = token_key)
-        except Token.DoesNotExist:
-            raise AuthenticationFailed('Invalid token.')
-
-        user = token.user
+        user = get_user_from_token(request)
 
         serializer = UserSerializer(user)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+
+
+class CurrentUserObjectsView(APIView):
+    def get(self, request):
+        user = get_user_from_token(request)
+
+        objects = Object.objects(author = user)
+        serializer = ObjectSerializer(objects, many = True)
+
         return Response(serializer.data, status = status.HTTP_200_OK)

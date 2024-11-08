@@ -2,10 +2,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from mongoengine import DoesNotExist
-
 from .models import Object
 from .serializers import ObjectSerializer
+from accounts.utils import get_user_from_token
 
 
 class ObjectListView(APIView):
@@ -18,10 +17,11 @@ class ObjectListView(APIView):
 
 class ObjectCreateView(APIView):
     def post(self, request):
+        user = get_user_from_token(request)
         serializer = ObjectSerializer(data = request.data)
         
         if serializer.is_valid():
-            obj = Object(**serializer.validated_data)
+            obj = Object(author = user, **serializer.validated_data)
             obj.save()
             
             return Response(ObjectSerializer(obj).data, status = status.HTTP_201_CREATED)
@@ -30,14 +30,8 @@ class ObjectCreateView(APIView):
 
 
 class ObjectDetailView(APIView):
-    def get_object(self, id):
-        try:
-            return Object.objects.get(id = id)
-        except DoesNotExist:
-            return None
-
     def get(self, request, id):
-        obj = self.get_object(id)
+        obj = Object.objects(id = id).first()
         
         if not obj:
             return Response(status = status.HTTP_404_NOT_FOUND)
@@ -47,14 +41,9 @@ class ObjectDetailView(APIView):
 
 
 class ObjectUpdateView(APIView):
-    def get_object(self, id):
-        try:
-            return Object.objects.get(id = id)
-        except DoesNotExist:
-            return None
-
     def put(self, request, id):
-        obj = self.get_object(id)
+        user = get_user_from_token(request)
+        obj = Object.objects(id = id, author = user).first()
         
         if not obj:
             return Response(status = status.HTTP_404_NOT_FOUND)
@@ -72,14 +61,9 @@ class ObjectUpdateView(APIView):
 
 
 class ObjectDeleteView(APIView):
-    def get_object(self, id):
-        try:
-            return Object.objects.get(id = id)
-        except DoesNotExist:
-            return None
-
     def delete(self, request, id):
-        obj = self.get_object(id)
+        user = get_user_from_token(request) 
+        obj = Object.objects(id = id, author = user).first()
         
         if not obj:
             return Response(status = status.HTTP_404_NOT_FOUND)
