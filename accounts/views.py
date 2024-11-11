@@ -6,8 +6,8 @@ from .models import User, Token
 from .serializers import UserSerializer, LoginSerializer
 from .utils import get_user_from_token
 
-from objects.models import Object
-from objects.serializers import ObjectSerializer
+from articles.models import Object
+from articles.serializers import ObjectSerializer
 
 
 class RegisterView(APIView):

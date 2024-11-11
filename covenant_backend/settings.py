@@ -4,6 +4,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 import mongoengine
+from corsheaders.defaults import default_headers
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -69,7 +70,7 @@ WSGI_APPLICATION = 'covenant_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {}
+# DATABASES = {}
 
 mongoengine.connect(
     db   = os.getenv("MONGO_NAME"), 
@@ -139,6 +140,7 @@ CORS_ALLOW_METHODS = (
     "PUT",
 )
 CORS_ALLOW_HEADERS = (
+    *default_headers,
     'content-disposition', 
     'accept-encoding',
     'content-type',
