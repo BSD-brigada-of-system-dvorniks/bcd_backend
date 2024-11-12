@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = os.getenv('DJANGO_SECRET')
-DEBUG      = os.getenv('DJANGO_DEBUG') == "True"  
+DEBUG      = os.getenv('DJANGO_DEBUG') == "True"
 
 if DEBUG:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
@@ -73,7 +73,7 @@ WSGI_APPLICATION = 'covenant_backend.wsgi.application'
 # DATABASES = {}
 
 mongoengine.connect(
-    db   = os.getenv("MONGO_NAME"), 
+    db   = os.getenv("MONGO_NAME"),
     host = f"mongodb://{os.getenv('MONGO_HOST')}:{os.getenv('MONGO_PORT')}/",
     username = os.getenv("MONGO_USER"),
     password = os.getenv("MONGO_PASSWORD"),
@@ -141,7 +141,7 @@ CORS_ALLOW_METHODS = (
 )
 CORS_ALLOW_HEADERS = (
     *default_headers,
-    'content-disposition', 
+    'content-disposition',
     'accept-encoding',
     'content-type',
     'accept',

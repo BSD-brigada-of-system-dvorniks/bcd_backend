@@ -16,8 +16,8 @@ def get_user_from_token(request):
     token_key = parts[1].decode()
     
     try:
-        token = Token.objects.get(key=token_key)
-    except Token.DoesNotExist:
-        raise AuthenticationFailed('Invalid token.')
+        token = Token.objects.get(key = token_key)
+    except Token.DoesNotExist as exc:
+        raise AuthenticationFailed('Invalid token.') from exc
     
     return token.user

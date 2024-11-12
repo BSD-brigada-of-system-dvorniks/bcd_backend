@@ -11,7 +11,7 @@ class ObjectListView(APIView):
     def get(self, request):
         print("Request Headers:", request.headers)
 
-        objects = Object.objects.fields(type = 1, level = 1, 
+        objects = Object.objects.fields(type = 1, level = 1,
                                         article__name = 1, article__published = 1)
         serializer = BasicObjectSerializer(objects, many = True)
         return Response(serializer.data)
@@ -26,7 +26,7 @@ class ObjectCreateView(APIView):
             article_data = serializer.validated_data.pop('article', None)
             article = Article(author = user, **article_data) if article_data else None
             obj = Object(article = article, **serializer.validated_data)
-            obj.save() 
+            obj.save()
             return Response(ObjectSerializer(obj).data, status = status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
@@ -72,7 +72,7 @@ class ObjectUpdateView(APIView):
 
 class ObjectDeleteView(APIView):
     def delete(self, request, id):
-        user = get_user_from_token(request) 
+        user = get_user_from_token(request)
         obj = Object.objects(id = id, article__author = user).first()
         
         if not obj:
