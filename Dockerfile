@@ -28,4 +28,7 @@ RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 80
 
-ENTRYPOINT [ "/app/entrypoint.sh" ]
+CMD ["/bin/sh", "-c", "\
+    python manage.py collectstatic --noinput && \
+    printenv | grep -v 'no_proxy' >> /etc/environment && \
+    python manage.py runserver 0.0.0.0:80"]
