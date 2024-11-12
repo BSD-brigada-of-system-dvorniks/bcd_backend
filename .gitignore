@@ -17,3 +17,4 @@ __docs__/
 .env
 debug.log
 db.sqlite3
+ruff.toml
