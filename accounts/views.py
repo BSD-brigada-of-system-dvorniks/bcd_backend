@@ -67,4 +67,4 @@ class CurrentUserObjectsView(APIView):
         objects = Object.objects(author = user)
         serializer = ObjectSerializer(objects, many = True)
 
-        return Response(serializer.data, status = status.HTTP_200_OK)
+        return Response({"objects": serializer.data}, status = status.HTTP_200_OK)

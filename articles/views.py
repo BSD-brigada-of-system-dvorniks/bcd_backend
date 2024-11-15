@@ -9,12 +9,11 @@ from accounts.utils import get_user_from_token
 
 class ObjectListView(APIView):
     def get(self, request):
-        print("Request Headers:", request.headers)
-
         objects = Object.objects.fields(type = 1, level = 1,
                                         article__name = 1, article__published = 1)
         serializer = BasicObjectSerializer(objects, many = True)
-        return Response(serializer.data)
+
+        return Response({"objects": serializer.data}, status = status.HTTP_200_OK)
 
 
 class ObjectCreateView(APIView):
@@ -40,7 +39,7 @@ class ObjectDetailView(APIView):
             return Response(status = status.HTTP_404_NOT_FOUND)
         
         serializer = ObjectSerializer(obj)
-        return Response(serializer.data)
+        return Response(serializer.data, status = status.HTTP_200_OK)
 
 
 class ObjectUpdateView(APIView):
@@ -65,7 +64,7 @@ class ObjectUpdateView(APIView):
                 setattr(obj, attr, value)
             
             obj.save()
-            return Response(ObjectSerializer(obj).data)
+            return Response(ObjectSerializer(obj).data, status = status.HTTP_200_OK)
         
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
